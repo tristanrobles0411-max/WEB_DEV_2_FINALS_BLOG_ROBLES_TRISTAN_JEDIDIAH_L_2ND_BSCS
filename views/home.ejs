@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bayan News</title>
+    <link rel="stylesheet" href="/bootstrap.min.css" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="topbar">
+        <div class="brand">Bayan News</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/post">Post</a>
+          <a href="/newsfeed">News Feed</a>
+        </nav>
+
+        <form class="search-form" id="searchForm">
+          <input id="searchInput" type="text" placeholder="Search posts..." aria-label="Search posts" />
+          <button class="secondary-btn" type="submit">Search</button>
+          <button class="delete-btn" type="button" id="clearSearchBtn">Clear</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="news-preview-section">
+        <div class="page-header preview-header">
+          <h2>Latest News</h2>
+        </div>
+
+        <div class="news-preview-grid">
+          <% if (newsPreview && newsPreview.length > 0) { %>
+            <% newsPreview.forEach(article => { %>
+              <a class="news-preview-card" href="/newsfeed" target="_self">
+                <div class="news-tag">ABS-CBN</div>
+                <h3><%= article.title %></h3>
+                <p><%= article.summary %></p>
+              </a>
+            <% }) %>
+          <% } %>
+        </div>
+      </section>
+
+      <div class="page-header">
+        <h2>Latest Posts</h2>
+        <a href="/post"><button class="primary-btn">Create Post</button></a>
+      </div>
+
+      <div class="category-filters" aria-label="Post category filters">
+        <a href="/" class="category-filter <%= selectedCategory === 'All' ? 'active' : '' %>">All</a>
+        <% categories.forEach(category => { %>
+          <a href="/?category=<%= encodeURIComponent(category) %>" class="category-filter <%= selectedCategory === category ? 'active' : '' %>"><%= category %></a>
+        <% }) %>
+      </div>
+
+      <div class="post-grid" id="postGrid">
+        <% if (posts.length === 0) { %>
+          <div class="empty-state">No posts yet. Be the first person to share something.</div>
+        <% } else { %>
+          <% posts.forEach(post => { %>
+            <article class="post-card" data-title="<%= post.title %>" data-author="<%= post.author %>" data-content="<%= post.content %>" data-category="<%= post.category || 'Others' %>">
+              <div class="post-category"><%= post.category || 'Others' %></div>
+              <h3><%= post.title %></h3>
+              <div class="meta">By <strong><%= post.author %></strong> · <%= new Date(post.createdAt).toLocaleString() %></div>
+              <p><%= post.content %></p>
+
+              <div class="post-actions">
+                <form class="like-form" data-post-id="<%= post.id %>" action="/posts/<%= post.id %>/like" method="POST">
+                  <button class="like-button" type="submit">❤ <span class="like-count"><%= post.likes %></span></button>
+                </form>
+
+                <form action="/posts/<%= post.id %>/delete" method="POST" style="display: flex; align-items: center; gap: 8px;">
+                  <input type="text" name="author" placeholder="Your name" required style="width: 140px; padding: 8px 10px;" />
+                  <button class="delete-btn" type="submit">Delete Post</button>
+                </form>
+              </div>
+
+              <div class="comment-list">
+                <% if (post.comments && post.comments.length > 0) { %>
+                  <% post.comments.forEach(comment => { %>
+                    <div class="comment-box">
+                      <strong><%= comment.author %></strong>
+                      <div><%= comment.text %></div>
+
+                      <form action="/posts/<%= post.id %>/comments/<%= comment.id %>/delete" method="POST" style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+                        <input type="text" name="author" placeholder="Your name" required style="width: 140px; padding: 8px 10px;" />
+                        <button class="delete-btn" type="submit">Delete Comment</button>
+                      </form>
+
+                      <% if (comment.replies && comment.replies.length > 0) { %>
+                        <% comment.replies.forEach(reply => { %>
+                          <div class="reply-box" style="margin-left: 18px; margin-top: 10px;">
+                            <strong><%= reply.author %></strong>
+                            <div><%= reply.text %></div>
+                          </div>
+                        <% }) %>
+                      <% } %>
+
+                      <form class="reply-form" action="/posts/<%= post.id %>/comments/<%= comment.id %>/replies" method="POST">
+                        <input type="text" name="author" placeholder="Your name" required />
+                        <textarea name="text" placeholder="Write a reply..." required></textarea>
+                        <button class="secondary-btn" type="submit">Reply</button>
+                      </form>
+                    </div>
+                  <% }) %>
+                <% } %>
+
+                <form class="comment-form" action="/posts/<%= post.id %>/comments" method="POST">
+                  <input type="text" name="author" placeholder="Your name" required />
+                  <textarea name="text" placeholder="Write a comment..." required></textarea>
+                  <button class="secondary-btn" type="submit">Comment</button>
+                </form>
+              </div>
+            </article>
+          <% }) %>
+        <% } %>
+      </div>
+
+      <div id="noPostsFound" class="empty-state" style="display: none;">No posts found.</div>
+    </main>
+
+    <footer class="footer">
+      <p><span>© 2026 Bayan News</span> • All rights reserved to ABS-CBN and Bayan News 2026.</p>
+    </footer>
+
+    <script src="/bootstrap.bundle.min.js"></script>
+    <script>
+      const searchInput = document.getElementById('searchInput');
+      const searchForm = document.getElementById('searchForm');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      const postCards = Array.from(document.querySelectorAll('.post-card'));
+      const noPostsFound = document.getElementById('noPostsFound');
+
+      function applySearch() {
+        const query = searchInput.value.trim().toLowerCase();
+
+        let visibleCount = 0;
+
+        postCards.forEach((card) => {
+          const title = (card.dataset.title || '').toLowerCase();
+          const author = (card.dataset.author || '').toLowerCase();
+          const content = (card.dataset.content || '').toLowerCase();
+
+          const matches = !query || title.includes(query) || author.includes(query) || content.includes(query);
+          card.style.display = matches ? 'block' : 'none';
+
+          if (matches) visibleCount += 1;
+        });
+
+        noPostsFound.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+
+      searchInput.addEventListener('input', applySearch);
+
+      searchForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        applySearch();
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        applySearch();
+      });
+
+      document.querySelectorAll('.like-form').forEach((form) => {
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+
+          const postId = form.dataset.postId;
+          const countElement = form.querySelector('.like-count');
+
+          try {
+            const response = await fetch(`/posts/${postId}/like`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({})
+            });
+
+            if (!response.ok) {
+              throw new Error('Failed to update like count');
+            }
+
+            const data = await response.json();
+            countElement.textContent = data.likes;
+          } catch (error) {
+            console.error('Like error:', error);
+            alert('There was a problem updating the like count.');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

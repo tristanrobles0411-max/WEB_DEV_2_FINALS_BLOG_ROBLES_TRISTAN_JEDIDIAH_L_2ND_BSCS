@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News Feed | Bayan News</title>
+    <link rel="stylesheet" href="/bootstrap.min.css" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="topbar">
+        <div class="brand">Bayan News</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/post">Post</a>
+          <a href="/newsfeed">News Feed</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="page-header">
+        <h2>News Feed</h2>
+        <a href="/"><button class="secondary-btn" type="button">Back to Home</button></a>
+      </div>
+
+      <form class="news-search-form" action="/newsfeed" method="GET">
+        <input
+          type="search"
+          name="q"
+          value="<%= query %>"
+          placeholder="Search ABS-CBN news..."
+          aria-label="Search ABS-CBN news"
+        />
+        <button class="secondary-btn" type="submit">Search News</button>
+        <% if (query) { %>
+          <a href="/newsfeed" class="delete-btn" style="text-decoration: none;">Clear</a>
+        <% } %>
+      </form>
+
+      <% if (articles.length === 0) { %>
+        <div class="empty-state">No ABS-CBN news found for &ldquo;<%= query %>&rdquo;.</div>
+      <% } else { %>
+        <div class="news-grid">
+          <% articles.forEach(article => { %>
+            <article class="news-card">
+              <div class="news-tag"><%= article.source %></div>
+              <h3><%= article.title %></h3>
+              <p><%= article.summary %></p>
+              <a href="<%= article.url %>" target="_blank" rel="noreferrer">Read more</a>
+            </article>
+          <% }) %>
+        </div>
+      <% } %>
+    </main>
+
+    <footer class="footer">
+      <p><span>© 2026 Bayan News</span> • All rights reserved to ABS-CBN and Bayan News 2026.</p>
+    </footer>
+  </body>
+</html>

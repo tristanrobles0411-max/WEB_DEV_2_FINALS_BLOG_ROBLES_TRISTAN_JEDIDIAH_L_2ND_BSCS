@@ -1,0 +1,21 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#14213D"/>
+  <rect x="0" y="0" width="1200" height="800" fill="url(#paint0_linear_1_2)" opacity="0.9"/>
+  <circle cx="890" cy="220" r="130" fill="#FCA311" fill-opacity="0.22"/>
+  <rect x="120" y="170" width="960" height="460" rx="24" fill="#F8F9FA" fill-opacity="0.08" stroke="#FCA311" stroke-width="4"/>
+  <rect x="180" y="240" width="430" height="32" rx="16" fill="#FCA311" fill-opacity="0.8"/>
+  <rect x="180" y="290" width="620" height="24" rx="12" fill="#E5E5E5" fill-opacity="0.8"/>
+  <rect x="180" y="330" width="560" height="24" rx="12" fill="#E5E5E5" fill-opacity="0.72"/>
+  <rect x="180" y="370" width="490" height="24" rx="12" fill="#E5E5E5" fill-opacity="0.72"/>
+  <rect x="840" y="248" width="180" height="180" rx="20" fill="#FCA311" fill-opacity="0.9"/>
+  <path d="M900 308L920 330L950 290L1000 348H1040V394H900V308Z" fill="#14213D"/>
+  <circle cx="924" cy="278" r="18" fill="#14213D"/>
+  <text x="600" y="610" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="700" fill="#FFFFFF">Bayan News</text>
+  <rect x="420" y="640" width="360" height="14" rx="7" fill="#FCA311"/>
+  <defs>
+    <linearGradient id="paint0_linear_1_2" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14213D"/>
+      <stop offset="1" stop-color="#0A1021"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Post | Bayan News</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="topbar">
+        <div class="brand">Bayan News</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/post">Post</a>
+          <a href="/newsfeed">News Feed</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="page-header">
+        <h2>Create a Post</h2>
+        <a href="/"><button class="secondary-btn" type="button">Back to Home</button></a>
+      </div>
+
+      <div class="form-box">
+        <form action="/post" method="POST" class="form-grid">
+          <div>
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text" placeholder="Post title" required />
+          </div>
+
+          <div>
+            <label for="author">Name</label>
+            <input id="author" name="author" type="text" placeholder="Your name" required />
+          </div>
+
+          <div>
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+              <% categories.forEach(category => { %>
+                <option value="<%= category %>"><%= category %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div>
+            <label for="content">Content</label>
+            <textarea id="content" name="content" placeholder="Write your post here..." required></textarea>
+          </div>
+
+          <button class="primary-btn" type="submit">Publish Post</button>
+        </form>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p><span>Bayan News</span> • Community stories and ideas.</p>
+    </footer>
+  </body>
+</html>
